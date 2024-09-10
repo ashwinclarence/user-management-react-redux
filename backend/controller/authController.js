@@ -1,7 +1,7 @@
 import userSchema from '../models/studentModel.js'
 import bcryptjs from 'bcryptjs'
 
-export const signIn = async (req, res) => {
+export const signIn = async (req, res,next) => {
     try {
 
         const { username, password, email } = req.body;
@@ -24,7 +24,7 @@ export const signIn = async (req, res) => {
         
     } catch (error) {
         console.log("Error on user sign in ", error);
-        res.status(500).json(error.message)
+        next(error)
         
     }
 }
