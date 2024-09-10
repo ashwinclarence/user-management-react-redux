@@ -3,14 +3,12 @@ import { Link } from "react-router-dom";
 
 // registration for the user
 const SignUp = () => {
-  const [name, setName] = useState("");
-  const [username, setUsername] = useState("");
-  const [password, setPassword] = useState("");
-  const [confirmPassword, setConfirmPassword] = useState("");
+  const [formData, setFormData] = useState({});
 
   const handleFormSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     try {
-      e.preventDefault();
+        e.preventDefault();
+        console.log(formData)
     } catch (error) {
       console.log(error);
     }
@@ -21,6 +19,10 @@ const SignUp = () => {
     } catch (error) {
       console.log(error);
     }
+  };
+
+    const handleInputChange = (e:React.ChangeEvent<HTMLInputElement>) => {
+      setFormData({...formData,[e.target.id]:e.target.value})
   };
   return (
     <div className="flex flex-col gap-8 items-center justify-center min-h-[100vh] p-8">
@@ -33,29 +35,29 @@ const SignUp = () => {
           type="text"
           className="border rounded w-96 p-2"
           placeholder="Name"
-          value={name}
-          onChange={(e) => setName(e.target.value)}
+          id="name"
+          onChange={handleInputChange}
         />
         <input
           type="text"
           className="border rounded w-96 p-2"
           placeholder="Username"
-          value={username}
-          onChange={(e) => setUsername(e.target.value)}
+          id="username"
+          onChange={handleInputChange}
         />
         <input
           type="password"
           className="border rounded w-96 p-2"
           placeholder="Password"
-          value={password}
-          onChange={(e) => setPassword(e.target.value)}
+          id="password"
+          onChange={handleInputChange}
         />
         <input
           type="password"
           className="border rounded w-96 p-2"
           placeholder="Confirm Password"
-          value={confirmPassword}
-          onChange={(e) => setConfirmPassword(e.target.value)}
+          id="confirm-password"
+          onChange={handleInputChange}
         />
         <button
           className="bg-blue-500 p-2 text-white font-semibold rounded"
