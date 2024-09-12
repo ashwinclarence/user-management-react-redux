@@ -1,13 +1,38 @@
 import React, { useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 
 const SignIn = () => {
-  const [loading, setLoading] = useState(false);
   const [formData, setFormData] = useState({});
+  const [loading, setLoading] = useState(false);
+  const navigate = useNavigate();
 
-  const handleFormSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+  const handleFormSubmit = async(e: React.FormEvent<HTMLFormElement>) => {
     try {
+      e.preventDefault()
+
+      setLoading(true);
+      let res = await fetch('/api/auth/sign-in', {
+        method: 'POST',
+        headers: {
+          'Content-Type':'application/json',
+        },
+        body: JSON.stringify(formData)
+      });
+
+      
+      
+      const data = await res.json();
+      console.log(data);
+      setLoading(false);
+
+      if (data.success === false) {
+        return;
+      }
+
+      navigate('/')
+      
+
     } catch (error) {
       console.log(error);
     }
