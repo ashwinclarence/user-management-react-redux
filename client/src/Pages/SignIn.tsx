@@ -6,7 +6,7 @@ import {
   signInSuccess,
   signInFailure,
 } from "../app/user/userSlice";
-import { useDispatch, UseDispatch, useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "../app/store";
 
 const SignIn = () => {
