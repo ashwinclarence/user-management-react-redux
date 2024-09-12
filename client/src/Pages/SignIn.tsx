@@ -1,44 +1,49 @@
 import React, { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
+import {
+  signInStart,
+  signInSuccess,
+  signInFailure,
+} from "../app/user/userSlice";
+import { useDispatch, UseDispatch, useSelector } from "react-redux";
+import { RootState } from "../app/store";
 
 const SignIn = () => {
   const [formData, setFormData] = useState({});
-  const [loading, setLoading] = useState(false);
+  const { loading, error } = useSelector((state:RootState) => state.user);
   const navigate = useNavigate();
+  const dispatch = useDispatch();
 
-  const handleFormSubmit = async(e: React.FormEvent<HTMLFormElement>) => {
+  const handleFormSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     try {
-      e.preventDefault()
-
-      setLoading(true);
-      let res = await fetch('/api/auth/sign-in', {
-        method: 'POST',
+      e.preventDefault();
+      dispatch(signInStart());
+      let res = await fetch("/api/auth/sign-in", {
+        method: "POST",
         headers: {
-          'Content-Type':'application/json',
+          "Content-Type": "application/json",
         },
-        body: JSON.stringify(formData)
+        body: JSON.stringify(formData),
       });
 
-      
-      
       const data = await res.json();
-      console.log(data);
-      setLoading(false);
 
+      // if the response is failure then update the error to the redux
       if (data.success === false) {
+        dispatch(signInFailure(data.message));
         return;
       }
 
-      navigate('/')
-      
-
+      // if everything is correct redirect to home
+      dispatch(signInSuccess(data));
+      navigate("/");
     } catch (error) {
-      console.log(error);
+      dispatch(signInFailure(error));
     }
   };
 
-  const handleInputChange = (e:React.ChangeEvent<HTMLInputElement>) => {
+  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     try {
       setFormData({ ...formData, [e.target.id]: e.target.value });
     } catch (error) {
@@ -47,9 +52,8 @@ const SignIn = () => {
   };
 
   const handleGoogleAuth = () => {
-    toast.warning("the functionality is not ready yet")
-  }
-
+    toast.warning("the functionality is not ready yet");
+  };
 
   // this is the login page
   return (
@@ -70,6 +74,9 @@ const SignIn = () => {
           id="password"
           onChange={handleInputChange}
         />
+        <p className="text-red-600">
+          {error ? error || "Something went wrong" : ""}
+        </p>
         <button
           className="bg-blue-500 p-2 text-white font-semibold rounded disabled:opacity-70"
           type="submit"
@@ -87,7 +94,7 @@ const SignIn = () => {
           Continue with Google
         </button>
         <p>
-         Are you a new user {" "}
+          Are you a new user{" "}
           <Link to="/sign-up" className="text-blue-600 font-semibold">
             Sign Up
           </Link>{" "}
