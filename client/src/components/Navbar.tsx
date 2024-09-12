@@ -1,6 +1,9 @@
-import { NavLink } from "react-router-dom";
+import { useSelector } from "react-redux";
+import { Link, NavLink } from "react-router-dom";
+import { RootState } from "../app/store";
 
 const Navbar = () => {
+  const { currentUser} = useSelector((state:RootState) => state.user);
   return (
     <div>
       <div className="flex items-center justify-between bg-slate-700 text-white p-4">
@@ -32,6 +35,11 @@ const Navbar = () => {
           >
             Sign In
           </NavLink>
+          <Link to='/profile'>
+          {currentUser &&
+          <img src={currentUser.profilePicture} alt="" />
+        }
+        </Link>
         </div>
       </div>
     </div>
