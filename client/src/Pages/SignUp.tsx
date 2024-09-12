@@ -1,74 +1,150 @@
 import { useState } from "react";
 import { Link } from "react-router-dom";
+import { toast } from "react-toastify";
 
 // registration for the user
 const SignUp = () => {
   const [formData, setFormData] = useState({});
+  const [loading, setLoading] = useState(false);
+  
 
-  const handleFormSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+  // form submit with user details
+  const handleFormSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     try {
-        e.preventDefault();
-        console.log(formData)
+      e.preventDefault();
+
+      // validate the form fields
+        setLoading(true);
+
+        const res = await fetch("/api/auth/sign-up", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(formData),
+        });
+
+        const data = await res.json();
+      setLoading(false);
+    
+
+        if (data.status === "failed") {
+          toast.error(data.message);
+        }
     } catch (error) {
+      setLoading(false);
       console.log(error);
     }
   };
 
+  // google authentication
   const handleGoogleAuth = () => {
     try {
+      toast.warning("the functionality is not ready yet");
     } catch (error) {
       console.log(error);
     }
   };
 
-    const handleInputChange = (e:React.ChangeEvent<HTMLInputElement>) => {
-      setFormData({...formData,[e.target.id]:e.target.value})
+  // convert the user input to an object with key as the id of the field and value as the entered value
+  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setFormData({ ...formData, [e.target.id]: e.target.value });
   };
+
+  // function to validate the form fields
+//   function validateRegisterForm() {
+//     let validFormField = true;
+//     let foundError = {
+//       name: "",
+//       email: "",
+//       password: "",
+//       confirmPassword: "",
+//     };
+//     if (!formData.email || formData.email.trim() === "") {
+//       validFormField = false;
+//       foundError.email = "Invalid email";
+//     }
+//     if (!formData.name || formData.name.trim() === "") {
+//       validFormField = false;
+//       foundError.name = "Invalid name";
+//     }
+//     if (!formData.password || formData.password.trim() === "") {
+//       validFormField = false;
+//       foundError.password = "Invalid password";
+//     }
+//     if (formData.password !== formData.confirmPassword || !formData.confirmPassword) {
+//       validFormField = false;
+//       foundError.confirmPassword = "Confirm password must be same";
+//     }
+//     setRegisterError(foundError);
+//     return validFormField;
+//   }
+
+  // this is the registration page
   return (
     <div className="flex flex-col gap-8 items-center justify-center min-h-[100vh] p-8">
       <h2 className="text-4xl font-semibold">Sign Up</h2>
-      <form
-        className="flex flex-col gap-6"
-        onSubmit={(e) => handleFormSubmit(e)}
-      >
-        <input
-          type="text"
-          className="border rounded w-96 p-2"
-          placeholder="Name"
-          id="name"
-          onChange={handleInputChange}
-        />
-        <input
-          type="text"
-          className="border rounded w-96 p-2"
-          placeholder="Username"
-          id="username"
-          onChange={handleInputChange}
-        />
-        <input
-          type="password"
-          className="border rounded w-96 p-2"
-          placeholder="Password"
-          id="password"
-          onChange={handleInputChange}
-        />
-        <input
-          type="password"
-          className="border rounded w-96 p-2"
-          placeholder="Confirm Password"
-          id="confirm-password"
-          onChange={handleInputChange}
-        />
+      <form className="flex flex-col gap-6" onSubmit={handleFormSubmit}>
+        <div>
+          <input
+            type="text"
+            className="border rounded w-96 p-2"
+            placeholder="Name"
+            id="name"
+            onChange={handleInputChange}
+          />{" "}
+          {/* {registerError.name && (
+            <p className="text-red-600">{registerError.name}</p>
+          )} */}
+        </div>
+        <div>
+          <input
+            type="text"
+            className="border rounded w-96 p-2"
+            placeholder="Username"
+            id="email"
+            onChange={handleInputChange}
+          />
+          {/* {registerError.email && (
+            <p className="text-red-600">{registerError.email}</p>
+          )} */}
+        </div>
+        <div>
+          <input
+            type="password"
+            className="border rounded w-96 p-2"
+            placeholder="Password"
+            id="password"
+            onChange={handleInputChange}
+          />
+          {/* {registerError.password && (
+            <p className="text-red-600">{registerError.password}</p>
+          )} */}
+        </div>
+        <div>
+          <input
+            type="password"
+            className="border rounded w-96 p-2"
+            placeholder="Confirm Password"
+            id="confirmPassword"
+            onChange={handleInputChange}
+          />
+          {/* {registerError.confirmPassword && (
+            <p className="text-red-600">{registerError.confirmPassword}</p>
+          )} */}
+        </div>
         <button
-          className="bg-blue-500 p-2 text-white font-semibold rounded"
+          className="bg-blue-500 p-2 text-white font-semibold rounded disabled:opacity-70"
           type="submit"
+          disabled={loading}
         >
-          Sign Up
+          {loading ? "loading..." : "Sign Up"}
         </button>
         <h2 className="text-center my-4">OR</h2>
         <button
           className="bg-red-600 p-2 text-white font-semibold rounded"
           type="button"
+          disabled={loading}
           onClick={handleGoogleAuth}
         >
           Continue with Google
