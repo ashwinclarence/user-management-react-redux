@@ -5,6 +5,7 @@ import dotenv from 'dotenv';
 import connectDB from './config/db.js';
 import userRouter from './routes/userRoutes.js'
 import authRouter from './routes/authRoute.js'
+import adminRoute from './routes/adminRoutes.js'
 import cookieParser from 'cookie-parser';
 
 const app = express();
@@ -24,6 +25,7 @@ const port = process.env.PORT || 3000;
 
 app.use('/api/user', userRouter)
 app.use('/api/auth', authRouter)
+app.use('/api/admin', adminRoute)
 
 
 

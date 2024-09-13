@@ -5,13 +5,13 @@ import {
   signInStart,
   signInSuccess,
   signInFailure,
-} from "../app/user/userSlice";
+} from "../../app/user/userSlice";
 import { useDispatch, useSelector } from "react-redux";
-import { RootState } from "../app/store";
+import { RootState } from "../../app/store";
 
 const SignIn = () => {
   const [formData, setFormData] = useState({});
-  const { loading, error } = useSelector((state:RootState) => state.user);
+  const { loading, error } = useSelector((state: RootState) => state.user);
   const navigate = useNavigate();
   const dispatch = useDispatch();
 
@@ -31,7 +31,7 @@ const SignIn = () => {
 
       // if the response is failure then update the error to the redux
       if (data.success === false) {
-        dispatch(signInFailure(data.message));
+        dispatch(signInFailure(data));
         return;
       }
 
@@ -75,7 +75,7 @@ const SignIn = () => {
           onChange={handleInputChange}
         />
         <p className="text-red-600">
-          {error ? error || "Something went wrong" : ""}
+          {error ? error.message || "Something went wrong" : ""}
         </p>
         <button
           className="bg-blue-500 p-2 text-white font-semibold rounded disabled:opacity-70"

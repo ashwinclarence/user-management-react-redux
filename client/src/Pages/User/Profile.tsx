@@ -1,16 +1,15 @@
 import { useDispatch, useSelector } from "react-redux";
-import { RootState } from "../app/store"; // Import RootState for proper typing
-import noProfile from "../assets/profile.png";
+import { RootState } from "../../app/store"; // Import RootState for proper typing
+import noProfile from "../../assets/profile.png";
 import { useEffect, useRef, useState } from "react";
 import { getDownloadURL, ref, uploadBytesResumable } from "firebase/storage";
-import { storage } from "../firebase/firebaseConfig";
+import { storage } from "../../firebase/firebaseConfig";
 import {
   updateUserStart,
   updateUserSuccess,
   updateUserFailure,
-  signOut
-} from "../app/user/userSlice";
-import { currentUserType } from "../types/type";
+  signOut,
+} from "../../app/user/userSlice";
 
 const Profile = () => {
   const { currentUser, loading, error } = useSelector(
@@ -19,7 +18,7 @@ const Profile = () => {
   const fileRef = useRef<HTMLInputElement | null>(null);
   const [image, setImage] = useState<File | null>(null);
   const [uploadProgress, setUploadProgress] = useState<number>(0);
-  const [formData, setFormData] = useState<currentUserType>({});
+  const [formData, setFormData] = useState({});
   const dispatch = useDispatch();
 
   useEffect(() => {
@@ -30,7 +29,7 @@ const Profile = () => {
 
   // handle current user nul
   if (!currentUser) {
-    throw new Error('user not found')
+    throw new Error("user not found");
   }
 
   const handleImageUpload = async (image: File) => {
@@ -90,17 +89,15 @@ const Profile = () => {
     }
   };
 
-
-
   // function handle signOut of the current user
-  const handleSignOut = async() => {
+  const handleSignOut = async () => {
     try {
-      await fetch('/api/user/signout');
-      dispatch(signOut())
+      await fetch("/api/user/signout");
+      dispatch(signOut());
     } catch (error) {
       console.log(error);
     }
-  }
+  };
 
   return (
     <div className="flex flex-col items-center justify-center min-h-screen bg-gray-100">
@@ -139,7 +136,7 @@ const Profile = () => {
           <p className="text-gray-500">{currentUser.email}</p>
         </div>
         {/* any error */}
-        <b className="text-red-600"> {error}</b>
+        <b className="text-red-600"> {error ? error.message : ""}</b>
         {/* Update Profile Button */}
         <button
           onClick={handleProfileUpdate}

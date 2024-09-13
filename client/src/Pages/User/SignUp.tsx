@@ -1,20 +1,22 @@
 import { useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
+import {signUpStart,signUpFailure,signUpSuccess} from '../../app/user/userSlice'
+import { useDispatch, useSelector } from "react-redux";
 
 // registration for the user
 const SignUp = () => {
   const [formData, setFormData] = useState({});
-  const [loading, setLoading] = useState(false);
-  
+  const {loading}=useSelector(state=>state.user)
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
 
   // form submit with user details
   const handleFormSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     try {
       e.preventDefault();
-
-      // validate the form fields
-        setLoading(true);
+dispatch(signUpStart())
+      
 
         const res = await fetch("/api/auth/sign-up", {
           method: "POST",
@@ -24,15 +26,16 @@ const SignUp = () => {
           body: JSON.stringify(formData),
         });
 
-        const data = await res.json();
-      setLoading(false);
-    
-
-        if (data.status === "failed") {
+      const data = await res.json();
+      
+      if (data.status === "failed") {
+          dispatch(signUpFailure(data))
           toast.error(data.message);
         }
+      dispatch(signUpSuccess(data))
+      navigate('/');
     } catch (error) {
-      setLoading(false);
+      dispatch(signUpFailure(error))
       console.log(error);
     }
   };

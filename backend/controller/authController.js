@@ -24,7 +24,17 @@ export const signUp = async (req, res,next) => {
 
         await newUser.save()
         
-        res.status(201).json({status:"success",message:"New user registration is successful"})
+        // res.status(201).json({ status: "success", message: "New user registration is successful" });
+
+         // remove the password
+         const { password: hashedPassword, ...rest } = newUser._doc;
+
+         // create a jwt token
+         const token = jwt.sign({ id: newUser._id }, process.env.JWT_SECRET);
+ 
+         const cookieExpiry = new Date(Date.now() + 1 * 24 * 60 * 60 * 1000);
+ 
+         res.cookie('access_token', token, { httpOnly: true,maxAge:cookieExpiry }).status(200).json(rest);
         
     } catch (error) {
         console.log("Error on user sign in ", error);
