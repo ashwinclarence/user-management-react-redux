@@ -28,16 +28,7 @@ const Navbar = () => {
           >
             Home
           </NavLink>
-          <NavLink
-            to="/about"
-            className={({ isActive }) =>
-              isActive
-                ? "text-red-500 border-b-2 border-red-500"
-                : "text-white hover:text-red-500 transition-all"
-            }
-          >
-            About
-          </NavLink>
+         
 
           {/* Sign In / User Profile */}
           {!currentUser ? (

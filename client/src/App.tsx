@@ -1,7 +1,6 @@
 import { BrowserRouter, Route, Routes } from "react-router-dom";
 import Home from "./Pages/Home";
 import Navbar from "./components/Navbar";
-import About from "./Pages/About";
 import PageNotFound from "./Pages/PageNotFound";
 import Profile from "./Pages/Profile";
 import SignIn from "./Pages/SignIn";
@@ -18,7 +17,6 @@ const App = () => {
         <Navbar />
         <Routes>
           <Route path="/" element={<Home />} />
-          <Route path="/about" element={<About />} />
           <Route path="/sign-in" element={<SignIn />} />
           <Route path="/sign-up" element={<SignUp />} />
           <Route path="*" element={<PageNotFound />} />
