@@ -1,20 +1,29 @@
 import { useSelector } from "react-redux";
 import { Link, NavLink } from "react-router-dom";
 import { RootState } from "../app/store";
+import noProfile from "../assets/profile.png";
 
 const Navbar = () => {
-  const { currentUser} = useSelector((state:RootState) => state.user);
+  const { currentUser } = useSelector((state: RootState) => state.user);
+
   return (
-    <div>
-      <div className="flex items-center justify-between bg-slate-700 text-white p-4">
-        <div className="">
-          <h2 className="text-3xl font-bold ">Manifest</h2>
+    <nav className="bg-slate-800 p-4 shadow-lg">
+      <div className="container mx-auto flex justify-between items-center">
+        {/* Brand Logo */}
+        <div>
+          <Link to="/" className="text-white text-3xl font-bold">
+            Manifest
+          </Link>
         </div>
-        <div className="flex items-center gap-4">
+
+        {/* Navigation Links */}
+        <div className="flex items-center gap-6">
           <NavLink
             to="/"
             className={({ isActive }) =>
-              isActive ? "text-red-600" : "text-white"
+              isActive
+                ? "text-red-500 border-b-2 border-red-500"
+                : "text-white hover:text-red-500 transition-all"
             }
           >
             Home
@@ -22,27 +31,42 @@ const Navbar = () => {
           <NavLink
             to="/about"
             className={({ isActive }) =>
-              isActive ? "text-red-600" : "text-white"
+              isActive
+                ? "text-red-500 border-b-2 border-red-500"
+                : "text-white hover:text-red-500 transition-all"
             }
           >
             About
           </NavLink>
-          <NavLink
-            to="/sign-in"
-            className={({ isActive }) =>
-              isActive ? "text-red-600" : "text-white"
-            }
-          >
-            Sign In
-          </NavLink>
-          <Link to='/profile'>
-          {currentUser &&
-          <img src={currentUser.profilePicture} alt="" />
-        }
-        </Link>
+
+          {/* Sign In / User Profile */}
+          {!currentUser ? (
+            <NavLink
+              to="/sign-in"
+              className={({ isActive }) =>
+                isActive
+                  ? "text-red-500 border-b-2 border-red-500"
+                  : "text-white hover:text-red-500 transition-all"
+              }
+            >
+              Sign In
+            </NavLink>
+          ) : (
+            <div className="relative">
+              {/* Profile Picture */}
+              <Link to="/profile">
+                <img
+                  src={currentUser.profilePicture || noProfile}
+                  alt="Profile"
+                  className="w-10 h-10 rounded-full border-2 border-white"
+                />
+              </Link>
+
+            </div>
+          )}
         </div>
       </div>
-    </div>
+    </nav>
   );
 };
 

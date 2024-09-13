@@ -5,13 +5,14 @@ import dotenv from 'dotenv';
 import connectDB from './config/db.js';
 import userRouter from './routes/userRoutes.js'
 import authRouter from './routes/authRoute.js'
-
+import cookieParser from 'cookie-parser';
 
 const app = express();
 dotenv.config();
 
 app.use(express.json())
 app.use(express.urlencoded({ extended: true }))
+app.use(cookieParser())
 
 // mongodb connection
 connectDB();
