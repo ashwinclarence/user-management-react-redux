@@ -9,8 +9,15 @@ import {
 import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "../../app/store";
 
+
+// signIn type
+type SignInType = {
+  email: string;
+  password: string;
+}
+
 const SignIn = () => {
-  const [formData, setFormData] = useState({});
+  const [formData, setFormData] = useState<SignInType>({email:"",password:""});
   const { loading, error } = useSelector((state: RootState) => state.user);
   const navigate = useNavigate();
   const dispatch = useDispatch();

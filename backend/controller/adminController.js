@@ -29,3 +29,39 @@ export const userDetails = async (req, res, next) => {
         next(error)
     }
 }
+
+export const updateUser = async (req, res, next) => {
+    try {
+        const userId = req.params.id;
+        const updateData = req.body;
+
+        const updatedUser = await userSchema.findByIdAndUpdate(userId, updateData, { new: true });
+
+        if (!updatedUser) {
+            return res.status(404).json({ message: "User not found" });
+        }
+
+        res.status(200).json(updatedUser);
+    } catch (error) {
+        next(error);
+    }
+};
+
+
+export const deleteUser = async (req, res, next) => {
+    try {
+        const userId = req.params.id; 
+        const user = await userSchema.findByIdAndDelete(userId);
+        if (!user) {
+            return res.status(404).json({ status: false, message: "User not found" });
+        }
+
+        res.status(200).json({ status: true, message: "User deleted successfully" });
+    } catch (error) {
+        
+        next(error);
+    }
+};
+
+
+

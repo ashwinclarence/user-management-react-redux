@@ -1,10 +1,14 @@
 import { Link } from "react-router-dom";
+import { adminSignOut } from '../app/admin/adminSlice';
+import { useDispatch } from "react-redux";
+
 
 const AdminNavbar = () => {
+  const dispatch = useDispatch();
 
     const handleAdminLogout = async() => {
-        try {
-            await fetch('/api/admin/logout');
+      try {
+        dispatch(adminSignOut());
         } catch (error) {
             console.log(error);
         }

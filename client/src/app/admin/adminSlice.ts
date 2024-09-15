@@ -1,10 +1,11 @@
 import { createSlice } from "@reduxjs/toolkit";
+import { currentUserType } from "../../types/type";
 
 const initialState = {
   adminStatus: false,
   adminLoading: false, 
   error: false,
-  userDetails: null, 
+  userDetails: [], 
 };
 
 const adminSlice = createSlice({
@@ -39,7 +40,18 @@ const adminSlice = createSlice({
       state.adminStatus = false;
       state.adminLoading = false;
       state.error = false;
-      state.userDetails = null;  
+      state.userDetails = [];  
+    },
+    deleteUserStart: (state) => {
+      state.adminLoading = true;
+    },
+    deleteUserSuccess: (state, action) => {
+      state.userDetails = state.userDetails.filter((user:currentUserType) => user._id !== action.payload);  
+      state.adminLoading = false;
+    },
+    deleteUserFailure: (state, action) => {
+      state.adminLoading = false;
+      state.error = action.payload;
     },
   },
 });
@@ -52,6 +64,9 @@ export const {
   fetchUserDetailsStart,
   fetchUserDetailsSuccess,
   fetchUserDetailsFailure,
+  deleteUserFailure,
+  deleteUserStart,
+  deleteUserSuccess
 } = adminSlice.actions;
 
 export default adminSlice.reducer;
