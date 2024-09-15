@@ -8,10 +8,11 @@ import {
   deleteUserSuccess,
   deleteUserFailure,
 } from "../../app/admin/adminSlice";
+import { RootState } from "../../app/store";
 
 const ViewUser = () => {
   const dispatch = useDispatch();
-  const { userDetails, adminLoading, error } = useSelector((state) => state.admin);
+  const { userDetails, adminLoading, error } = useSelector((state:RootState) => state.admin);
 
   useEffect(() => {
     handleGetUserDetails();

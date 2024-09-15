@@ -6,7 +6,8 @@ export type currentUserType = {
     _id?: string;
 }
 
-export type Response = {
+export type ErrorType = {
     message?: string;
     statusCode?: string;
+    success?: string;
 }

@@ -10,6 +10,7 @@ import {
   updateUserFailure,
   signOut,
 } from "../../app/user/userSlice";
+import { currentUserType } from "../../types/type";
 
 const Profile = () => {
   const { currentUser, loading, error } = useSelector(
@@ -18,7 +19,7 @@ const Profile = () => {
   const fileRef = useRef<HTMLInputElement | null>(null);
   const [image, setImage] = useState<File | null>(null);
   const [uploadProgress, setUploadProgress] = useState<number>(0);
-  const [formData, setFormData] = useState({});
+  const [formData, setFormData] = useState<currentUserType>({});
   const dispatch = useDispatch();
 
   useEffect(() => {
@@ -27,7 +28,7 @@ const Profile = () => {
     }
   }, [image]);
 
-  // handle current user nul
+  // handle current user null
   if (!currentUser) {
     throw new Error("user not found");
   }
@@ -67,6 +68,7 @@ const Profile = () => {
   const handleProfileUpdate = async () => {
     try {
       dispatch(updateUserStart());
+
       let res = await fetch(`/api/user/update-profile/${currentUser._id}`, {
         method: "POST",
         headers: {
@@ -78,13 +80,13 @@ const Profile = () => {
       let data = await res.json();
 
       if (data.success === false) {
-        dispatch(updateUserFailure(data));
+        dispatch(updateUserFailure(data.message));
         return;
       }
 
       dispatch(updateUserSuccess(data));
-    } catch (error) {
-      dispatch(updateUserFailure(error));
+    } catch (error:any) {
+      dispatch(updateUserFailure(error.message));
       console.error("Error in handleProfileUpdate:", error);
     }
   };
@@ -136,7 +138,7 @@ const Profile = () => {
           <p className="text-gray-500">{currentUser.email}</p>
         </div>
         {/* any error */}
-        <b className="text-red-600"> {error ? error.message : ""}</b>
+        <b className="text-red-600"> {error ? error : ""}</b>
         {/* Update Profile Button */}
         <button
           onClick={handleProfileUpdate}

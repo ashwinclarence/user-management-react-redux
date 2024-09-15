@@ -1,9 +1,16 @@
 import { createSlice } from "@reduxjs/toolkit";
+import { currentUserType } from "../../types/type";
 
-const initialState = {
+type InitialStateType = {
+  currentUser: currentUserType|null;
+  loading: boolean;
+  error: boolean |string;
+}
+
+const initialState:InitialStateType = {
   currentUser: null,
   loading: false,
-  error: false,
+  error: false ,
 };
 
 const userSlice = createSlice({

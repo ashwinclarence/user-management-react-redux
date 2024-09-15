@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 import {
@@ -22,10 +22,21 @@ const SignIn = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
 
+  useEffect(() => {
+    dispatch(signInFailure(false))
+  },[])
+
   const handleFormSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     try {
       e.preventDefault();
       dispatch(signInStart());
+
+        // validate the form fields
+      if (formData.email?.trim() === '' || formData.password?.trim() === '') {
+        dispatch(signInFailure({message:"Empty username or password"}));
+        return 
+      }
+
       let res = await fetch("/api/auth/sign-in", {
         method: "POST",
         headers: {
@@ -82,7 +93,7 @@ const SignIn = () => {
           onChange={handleInputChange}
         />
         <p className="text-red-600">
-          {error ? error.message || "Something went wrong" : ""}
+          {error ?( error.message || "Something went wrong") : ""}
         </p>
         <button
           className="bg-blue-500 p-2 text-white font-semibold rounded disabled:opacity-70"
