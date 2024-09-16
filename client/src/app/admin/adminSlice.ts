@@ -1,7 +1,14 @@
 import { createSlice } from "@reduxjs/toolkit";
 import { currentUserType } from "../../types/type";
 
-const initialState = {
+type InitialStateType = {
+  adminStatus: boolean;
+  adminLoading: boolean;
+  error: boolean;
+  userDetails: currentUserType[];
+}
+
+const initialState:InitialStateType = {
   adminStatus: false,
   adminLoading: false, 
   error: false,
@@ -53,6 +60,34 @@ const adminSlice = createSlice({
       state.adminLoading = false;
       state.error = action.payload;
     },
+    editUserStart: (state) => {
+      state.error = false;
+      state.adminLoading = true;
+    },
+    editUserSuccess: (state, action) => {
+      state.userDetails = state.userDetails.map((user: currentUserType) =>
+        user._id === action.payload.userDetail._id 
+          ? { ...user, ...action.payload.userDetail } 
+          : user
+      );
+      state.adminLoading = false;
+    },
+    editUserFailure: (state,action) => {
+      state.error = action.payload;
+      state.adminLoading = false;
+    },
+    addNewUserStart: (state) => {
+      state.adminLoading = true;
+      state.error = false;
+    },
+    addNewUserSuccess: (state, action) => {
+      state.adminLoading = false;
+      state.userDetails=[action.payload.newUser,...state.userDetails]
+    },
+    addNewUserFailure: (state,action) => {
+      state.adminLoading = false;
+      state.error = action.payload;
+    }
   },
 });
 
@@ -66,7 +101,13 @@ export const {
   fetchUserDetailsFailure,
   deleteUserFailure,
   deleteUserStart,
-  deleteUserSuccess
+  deleteUserSuccess,
+  editUserFailure,
+  editUserStart,
+  editUserSuccess,
+  addNewUserFailure,
+  addNewUserStart,
+  addNewUserSuccess
 } = adminSlice.actions;
 
 export default adminSlice.reducer;

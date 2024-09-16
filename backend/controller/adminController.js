@@ -21,7 +21,7 @@ export const adminLogin = async (req,res,next) => {
 
 export const userDetails = async (req, res, next) => {
     try {
-        let userDetail = await userSchema.find({},{password:0});
+        let userDetail = await userSchema.find({},{password:0}).sort({createdAt:-1})
         
         res.status(200).json(userDetail)
         
@@ -33,15 +33,16 @@ export const userDetails = async (req, res, next) => {
 export const updateUser = async (req, res, next) => {
     try {
         const userId = req.params.id;
-        const updateData = req.body;
+        const { name } = req.body;
 
-        const updatedUser = await userSchema.findByIdAndUpdate(userId, updateData, { new: true });
+        const userDetail = await userSchema.findByIdAndUpdate(userId, { name },{new:true});
 
-        if (!updatedUser) {
-            return res.status(404).json({ message: "User not found" });
+        if (!userDetail) {
+            
+            return res.status(404).json({ message: "User not found", status:false });
         }
 
-        res.status(200).json(updatedUser);
+        res.status(200).json({userDetail,message:"user details updated successfully", status:true});
     } catch (error) {
         next(error);
     }
@@ -62,6 +63,30 @@ export const deleteUser = async (req, res, next) => {
         next(error);
     }
 };
+
+
+export const addNewUser = async (req, res, next) => {
+    try {
+        const { name, email, password } = req.body;
+        if (!name || !email || !password) {
+            return res.status(400).json({ status: false, message: "All fields are required" });
+        }
+        const newUser = new userSchema({
+            name,
+            email,
+            password
+        })
+        await newUser.save();
+
+        console.log(newUser);
+        
+        
+        res.status(200).json({newUser,status:true,message:"New user created successfully"})
+        
+    } catch (error) {
+        next(error)
+    }
+}
 
 
 

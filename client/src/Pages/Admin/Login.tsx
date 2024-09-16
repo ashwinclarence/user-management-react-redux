@@ -35,14 +35,15 @@ const Login = () => {
       const data = await res.json();
 
       if (!data.status) {
-        dispatch(adminSignInFailure(data));
+        dispatch(adminSignInFailure(data.message));
         return;
       }
 
       dispatch(adminSignInSuccess(data));
       navigate("/admin");
+
     } catch (error: any) {
-      dispatch(adminSignInFailure(error.toString())); // Ensure error is dispatched as a string or appropriate format
+      dispatch(adminSignInFailure(error)); 
     }
   };
 
@@ -67,12 +68,12 @@ const Login = () => {
           onChange={handleInputChange}
         />
         <p className="text-red-600">
-          {error ? error.message || "Something went wrong" : ""}
+          {error ? error || "Something went wrong" : ""}
         </p>
         <button
           className="bg-blue-500 p-2 text-white font-semibold rounded disabled:opacity-70"
           type="submit"
-          disabled={adminLoading} // Disable button while loading
+          disabled={adminLoading} 
         >
           {adminLoading ? "Loading..." : "Login"}
         </button>

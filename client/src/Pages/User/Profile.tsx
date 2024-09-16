@@ -79,7 +79,7 @@ const Profile = () => {
 
       let data = await res.json();
 
-      if (data.success === false) {
+      if (data.status === false) {
         dispatch(updateUserFailure(data.message));
         return;
       }

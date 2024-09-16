@@ -33,7 +33,7 @@ const SignIn = () => {
 
         // validate the form fields
       if (formData.email?.trim() === '' || formData.password?.trim() === '') {
-        dispatch(signInFailure({message:"Empty username or password"}));
+        dispatch(signInFailure("Empty username or password"));
         return 
       }
 
@@ -48,8 +48,8 @@ const SignIn = () => {
       const data = await res.json();
 
       // if the response is failure then update the error to the redux
-      if (data.success === false) {
-        dispatch(signInFailure(data));
+      if (data.status === false) {
+        dispatch(signInFailure(data.message));
         return;
       }
 
@@ -93,7 +93,7 @@ const SignIn = () => {
           onChange={handleInputChange}
         />
         <p className="text-red-600">
-          {error ?( error.message || "Something went wrong") : ""}
+          {error ?( error || "Something went wrong") : ""}
         </p>
         <button
           className="bg-blue-500 p-2 text-white font-semibold rounded disabled:opacity-70"

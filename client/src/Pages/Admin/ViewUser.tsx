@@ -9,15 +9,19 @@ import {
   deleteUserFailure,
 } from "../../app/admin/adminSlice";
 import { RootState } from "../../app/store";
+import Modal from "../../components/Modal";
+import EditModal from "../../components/EditModal";
 
 const ViewUser = () => {
   const dispatch = useDispatch();
-  const { userDetails, adminLoading, error } = useSelector((state:RootState) => state.admin);
+  const { userDetails, adminLoading } = useSelector((state:RootState) => state.admin);
 
   useEffect(() => {
     handleGetUserDetails();
   }, []);
 
+
+  // get the user details from mongodb
   const handleGetUserDetails = async () => {
     try {
       dispatch(fetchUserDetailsStart());
@@ -35,6 +39,7 @@ const ViewUser = () => {
     }
   };
 
+  //function to handle delete a user 
   const handleDeleteUser = async (userId: string) => {
     try {
 
@@ -56,17 +61,24 @@ const ViewUser = () => {
         throw new Error(data.message || "Failed to delete user");
       }
 
-      dispatch(deleteUserSuccess(userId)); // Update Redux state
+      dispatch(deleteUserSuccess(userId)); 
+
     } catch (error) {
       dispatch(deleteUserFailure(error));
     }
   };
 
+
+
+
   return (
     <div className="mt-10 container mx-auto">
-      <h1 className="text-2xl font-semibold mb-4">User Details</h1>
+      <div className="flex justify-between items-center my-5">
+        <h1 className="text-2xl font-semibold mb-4">User Details</h1>
+        <Modal />
+    </div>
       {adminLoading && <p>Loading...</p>}
-      {error && <p className="text-red-600">{error}</p>}
+      {/* {error ? <p className="text-red-600">{error}</p>:''} */}
       <div className="overflow-x-auto">
         <table className="min-w-full bg-white border border-gray-200">
           <thead>
@@ -90,12 +102,7 @@ const ViewUser = () => {
                   {new Date(user.createdAt).toLocaleDateString()}
                 </td>
                 <td className="py-3 px-6 flex space-x-2">
-                  <button
-                    className="bg-blue-500 text-white py-1 px-3 rounded hover:bg-blue-600"
-                    onClick={() => console.log("Edit user feature")}
-                  >
-                    Edit
-                  </button>
+                  <EditModal name={user.name} email={ user.email} id={user._id} />
                   <button
                     className="bg-red-500 text-white py-1 px-3 rounded hover:bg-red-600"
                     onClick={() => handleDeleteUser(user._id)}
@@ -109,6 +116,7 @@ const ViewUser = () => {
           </tbody>
         </table>
       </div>
+     
     </div>
   );
 };

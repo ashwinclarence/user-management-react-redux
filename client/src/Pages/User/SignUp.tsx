@@ -56,7 +56,7 @@ const SignUp = () => {
 
       const data = await res.json();
 
-      if (data.status === "failed") {
+      if (data.status === false) {
         dispatch(signUpFailure(data));
         toast.error(data.message);
       }

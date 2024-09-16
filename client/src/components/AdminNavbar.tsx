@@ -12,7 +12,8 @@ const AdminNavbar = () => {
         } catch (error) {
             console.log(error);
         }
-    }
+  }
+  
   return (
     <nav className="bg-slate-800 p-4 shadow-lg">
       <div className="container mx-auto flex justify-between items-center">
