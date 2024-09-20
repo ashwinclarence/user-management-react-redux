@@ -42,7 +42,7 @@ const SignUp = () => {
       dispatch(signUpStart());
 
       if (!validateRegisterForm()) {
-        dispatch(signUpFailure({ message: "Invalid fields" }))
+        dispatch(signUpFailure("Invalid fields"))
         return
       }
 
